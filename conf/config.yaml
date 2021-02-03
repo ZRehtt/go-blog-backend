@@ -1,0 +1,19 @@
+app:
+  mode: debug
+
+server:
+  port: 8090
+
+database:
+  name: mysql
+  user:
+  password:
+  port: 3306
+  dbname:
+  config: "charset=utf8mb4&parseTime=True&loc=Local"
+
+redis:
+  port: 6379
+  db: 0
+  password: ""
+
