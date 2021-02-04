@@ -5,11 +5,11 @@ server:
   port: 8090
 
 database:
-  name: mysql
-  user:
+  type: "mysql"
+  user: "root"
   password:
   port: 3306
-  dbname:
+  dbname: "my_blog"
   config: "charset=utf8mb4&parseTime=True&loc=Local"
 
 redis:

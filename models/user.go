@@ -2,13 +2,14 @@ package models
 
 import (
 	"errors"
+
 	"golang.org/x/crypto/bcrypt"
 )
 
-//User
+//User ...
 type User struct {
 	Model
-	Username *string `json:"username" gorm:"username;comment:用户名"`
+	Username     *string `json:"username" gorm:"username;comment:用户名"`
 	PasswordHash *[]byte `json:"-" gorm:"password_hash;comment:用户密码"`
 }
 
