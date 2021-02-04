@@ -12,7 +12,7 @@ func NewViper() error {
 	viper.SetConfigName("config")
 	viper.SetConfigType("yaml")
 	viper.AddConfigPath("/config/")
-	viper.AddConfigPath(".")
+	viper.AddConfigPath("./conf")
 
 	//监视配置文件变化，重新读取配置数据
 	//Viper在运行时拥有读取配置文件的能力。

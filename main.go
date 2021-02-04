@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/ZRehtt/go-blog-backend/api"
+	"github.com/ZRehtt/go-blog-backend/models"
 	"github.com/ZRehtt/go-blog-backend/settings"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
@@ -16,6 +17,12 @@ func main() {
 	if err := settings.NewViper(); err != nil {
 		logrus.WithError(err).Error("Failed to read config file!")
 	}
+
+	if err := models.NewDatabase(); err != nil {
+		logrus.WithError(err).Error("Failed to connect database!")
+	}
+	logrus.Debug("database is ready to use.")
+
 	router := api.NewRouter()
 
 	server := &http.Server{

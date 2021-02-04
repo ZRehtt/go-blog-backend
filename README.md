@@ -2,5 +2,5 @@
 
 ## 使用的框架和库
 - Gin
-- GORM
+- GORM v2
 - Viper

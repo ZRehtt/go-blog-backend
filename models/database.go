@@ -16,7 +16,7 @@ var (
 )
 
 //NewDatabase 数据库连接初始化器
-func NewDatabase() {
+func NewDatabase() error {
 	driverName := viper.GetString("database.type")
 	user := viper.GetString("database.user")
 	password := viper.GetString("database.password")
@@ -34,20 +34,22 @@ func NewDatabase() {
 		DontSupportRenameColumn:   true,  // 用 `change` 重命名列，MySQL 8 之前的数据库和 MariaDB 不支持重命名列
 		SkipInitializeWithVersion: false, // 根据当前 MySQL 版本自动配置
 	}), &gorm.Config{
-		SkipDefaultTransaction:                   false, //默认事务，禁用可以提升30%性能
-		DisableForeignKeyConstraintWhenMigrating: true,  //禁用gorm默认的外键约束
+		SkipDefaultTransaction: false, //默认事务，禁用可以提升30%性能
+		//DisableForeignKeyConstraintWhenMigrating: true,  //禁用gorm默认的外键约束
 		NamingStrategy: schema.NamingStrategy{ ////命名策略表、列的命名策略
 			SingularTable: true, //禁用数据库表名复数
 		},
 	})
 	if err != nil {
 		logrus.WithField("database", driverName).Error("Failed to open MySQL!")
+		return err
 	}
 
 	//数据库连接池
 	sqlDB, err := db.DB()
 	if err != nil {
 		logrus.WithField("err", err).Error("Failed to get database connection pool!")
+		return err
 	}
 	// SetMaxIdleConns 设置空闲连接池中连接的最大数量
 	sqlDB.SetMaxIdleConns(10)
@@ -62,5 +64,7 @@ func NewDatabase() {
 	err = db.Set("gorm:table_options", "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4").AutoMigrate(&User{}, &Article{}, &Tag{})
 	if err != nil {
 		logrus.WithField("err", err).Error("Failed to migrate database!")
+		return err
 	}
+	return nil
 }
