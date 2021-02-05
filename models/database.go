@@ -37,7 +37,8 @@ func NewDatabase() error {
 		SkipDefaultTransaction: false, //默认事务，禁用可以提升30%性能
 		//DisableForeignKeyConstraintWhenMigrating: true,  //禁用gorm默认的外键约束
 		NamingStrategy: schema.NamingStrategy{ ////命名策略表、列的命名策略
-			SingularTable: true, //禁用数据库表名复数
+			SingularTable: true,    //禁用数据库表名复数
+			TablePrefix:   "blog_", //表名前缀
 		},
 	})
 	if err != nil {

@@ -20,7 +20,7 @@ type Tag struct {
 func GetTags(pageNumber, pageSize int, maps interface{}) ([]*Tag, error) {
 	var tags []*Tag
 	if pageSize > 0 && pageNumber > 0 {
-		err = db.Table("blog_tag").Where(maps).Find(&tags).Offset(pageSize).Limit(pageNumber).Error
+		err = db.Where(maps).Find(&tags).Offset(pageSize).Limit(pageNumber).Error
 	} else {
 		err = db.Table("blog_tag").Where(maps).Find(&tags).Error
 	}
@@ -33,7 +33,7 @@ func GetTags(pageNumber, pageSize int, maps interface{}) ([]*Tag, error) {
 //GetTagTotal 根据约束计算标签总数
 func GetTagTotal(maps interface{}) (int64, error) {
 	var count int64
-	if err := db.Table("blog_tag").Model(&Tag{}).Where(maps).Count(&count).Error; err != nil {
+	if err := db.Model(&Tag{}).Where(maps).Count(&count).Error; err != nil {
 		logrus.WithError(err).Error("Error get tag total!")
 		return 0, err
 	}
@@ -43,7 +43,7 @@ func GetTagTotal(maps interface{}) (int64, error) {
 //ExistTagByName 检查是否有同名标签
 func ExistTagByName(name string) (bool, error) {
 	var tag Tag
-	err := db.Table("blog_tag").Select("id").Where("name = ? AND deleted_at IS NULL", name).First(&tag).Error
+	err := db.Select("id").Where("name = ? AND deleted_at IS NULL", name).First(&tag).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
 		return false, err
 	}
@@ -55,7 +55,7 @@ func ExistTagByName(name string) (bool, error) {
 
 //AddTag 添加标签
 func AddTag(name string, state int, createdBy string) error {
-	if err := db.Table("blog_tag").Create(&Tag{
+	if err := db.Create(&Tag{
 		Name:      &name,
 		State:     &state,
 		CreatedBy: &createdBy,
@@ -68,7 +68,7 @@ func AddTag(name string, state int, createdBy string) error {
 //ExistTagByID 根据ID确定标签是否存在
 func ExistTagByID(id int) (bool, error) {
 	var tag Tag
-	err := db.Table("blog_tag").Select("id").Where("id = ? AND deleted_at IS NULL", id).First(&tag).Error
+	err := db.Select("id").Where("id = ? AND deleted_at IS NULL", id).First(&tag).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
 		return false, err
 	}
@@ -80,7 +80,7 @@ func ExistTagByID(id int) (bool, error) {
 
 //DeleteTag 删除标签
 func DeleteTag(id int) error {
-	err := db.Table("blog_tag").Where("id = ?", id).Delete(&Tag{}).Error
+	err := db.Where("id = ?", id).Delete(&Tag{}).Error
 	if err != nil {
 		return err
 	}
@@ -89,7 +89,7 @@ func DeleteTag(id int) error {
 
 //UpdateTag 更新标签
 func UpdateTag(id int, data interface{}) error {
-	err := db.Table("blog_tag").Model(&Tag{}).Where("id = ? AND deleted_at IS NULL", id).Updates(data).Error
+	err := db.Model(&Tag{}).Where("id = ? AND deleted_at IS NULL", id).Updates(data).Error
 	if err != nil {
 		return err
 	}
@@ -98,7 +98,7 @@ func UpdateTag(id int, data interface{}) error {
 
 //CleanAllTag 清除所有的标签
 func CleanAllTag() (bool, error) {
-	if err := db.Table("blog_tag").Unscoped().Where("deleted_at IS NOT NULL").Delete(&Tag{}).Error; err != nil {
+	if err := db.Unscoped().Where("deleted_at IS NOT NULL").Delete(&Tag{}).Error; err != nil {
 		return false, err
 	}
 	return true, nil

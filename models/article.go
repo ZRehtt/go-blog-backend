@@ -24,7 +24,7 @@ type Article struct {
 //ExistArticleByID 根据ID判断指定文章是否存在
 func ExistArticleByID(id int) bool {
 	var article Article
-	err := db.Table("blog_article").Select("id").Where("id = ? AND deleted_at IS NULL", id).First(&article).Error
+	err := db.Select("id").Where("id = ? AND deleted_at IS NULL", id).First(&article).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
 		logrus.WithError(err).Error("Con't find article by ID!")
 		return false
@@ -38,7 +38,7 @@ func ExistArticleByID(id int) bool {
 //GetArticleTotal 根据约束条件获取文章总数
 func GetArticleTotal(maps interface{}) (int64, error) {
 	var count int64
-	if err := db.Table("blog_article").Model(&Article{}).Where(maps).Count(&count).Error; err != nil {
+	if err := db.Model(&Article{}).Where(maps).Count(&count).Error; err != nil {
 		return 0, err
 	}
 	return count, nil
@@ -47,7 +47,7 @@ func GetArticleTotal(maps interface{}) (int64, error) {
 //GetArticles 获取指定页码和数量的文章数
 func GetArticles(pageNumber, pageSize int, maps interface{}) ([]*Article, error) {
 	var articles []*Article
-	err := db.Table("blog_article").Preload("blog_tag").Where(maps).Offset(pageNumber).Limit(pageSize).Find(articles).Error
+	err := db.Preload("blog_tag").Where(maps).Offset(pageNumber).Limit(pageSize).Find(articles).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
 		return nil, err
 	}
@@ -57,7 +57,7 @@ func GetArticles(pageNumber, pageSize int, maps interface{}) ([]*Article, error)
 //GetArticle 根据ID获取文章
 func GetArticle(id int) (*Article, error) {
 	var article Article
-	err := db.Table("blog_article").Where("id = ? AND deleted_at IS NULL", id).First(&article).Error
+	err := db.Where("id = ? AND deleted_at IS NULL", id).First(&article).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
 		return nil, err
 	}
@@ -66,7 +66,7 @@ func GetArticle(id int) (*Article, error) {
 
 //UpdateArticle 更新单篇文章
 func UpdateArticle(id int, data interface{}) error {
-	if err := db.Table("blog_article").Model(&Article{}).Where("id = ? AND deleted_at IS NULL", id).Updates(data).Error; err != nil {
+	if err := db.Model(&Article{}).Where("id = ? AND deleted_at IS NULL", id).Updates(data).Error; err != nil {
 		return err
 	}
 	return nil
@@ -81,7 +81,7 @@ func AddArticle(data map[string]interface{}) error {
 		CreatedBy: data["created_by"].(string),
 		State:     data["state"].(int),
 	}
-	if err := db.Table("blog_article").Create(&article).Error; err != nil {
+	if err := db.Create(&article).Error; err != nil {
 		return err
 	}
 	return nil
@@ -89,7 +89,7 @@ func AddArticle(data map[string]interface{}) error {
 
 //DeleteArticle 删除单篇文章
 func DeleteArticle(id int) error {
-	if err := db.Table("blog_article").Where("id = ?", id).Delete(Article{}).Error; err != nil {
+	if err := db.Where("id = ?", id).Delete(Article{}).Error; err != nil {
 		return err
 	}
 	return nil
@@ -97,7 +97,7 @@ func DeleteArticle(id int) error {
 
 //CleanAllArticle 删除所有的文章
 func CleanAllArticle() error {
-	if err := db.Table("blog_article").Unscoped().Where("deleted_at IS NOT NULL").Delete(&Article{}).Error; err != nil {
+	if err := db.Unscoped().Where("deleted_at IS NOT NULL").Delete(&Article{}).Error; err != nil {
 		return err
 	}
 	return nil
