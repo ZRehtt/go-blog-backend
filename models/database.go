@@ -60,11 +60,11 @@ func NewDatabase() error {
 	// SetConnMaxLifetime 设置连接可复用的最大时间。
 	sqlDB.SetConnMaxLifetime(time.Hour)
 
-	//数据库迁移
-	err = db.Set("gorm:table_options", "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4").AutoMigrate(&User{}, &Article{}, &Tag{})
-	if err != nil {
-		logrus.WithField("err", err).Error("Failed to migrate database!")
-		return err
-	}
+	// //数据库迁移
+	// err = db.Set("gorm:table_options", "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4").AutoMigrate(&User{}, &Article{}, &Tag{})
+	// if err != nil {
+	// 	logrus.WithField("err", err).Error("Failed to migrate database!")
+	// 	return err
+	// }
 	return nil
 }
