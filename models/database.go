@@ -26,19 +26,19 @@ func NewDatabase() error {
 	dsn := user + ":" + password + "@tcp(:" + port + ")/" + dbname + "?" + config
 
 	db, err = gorm.Open(mysql.New(mysql.Config{
-		DriverName:                driverName,
-		DSN:                       dsn,
-		DefaultStringSize:         256,   // string 类型字段的默认长度
-		DisableDatetimePrecision:  true,  // 禁用 datetime 精度，MySQL 5.6 之前的数据库不支持
-		DontSupportRenameIndex:    true,  // 重命名索引时采用删除并新建的方式，MySQL 5.7 之前的数据库和 MariaDB 不支持重命名索引
-		DontSupportRenameColumn:   true,  // 用 `change` 重命名列，MySQL 8 之前的数据库和 MariaDB 不支持重命名列
+		DriverName: driverName,
+		DSN:        dsn,
+		//DefaultStringSize:         256,   // string 类型字段的默认长度
+		//DisableDatetimePrecision:  true,  // 禁用 datetime 精度，MySQL 5.6 之前的数据库不支持
+		//DontSupportRenameIndex:    true,  // 重命名索引时采用删除并新建的方式，MySQL 5.7 之前的数据库和 MariaDB 不支持重命名索引
+		//DontSupportRenameColumn:   true,  // 用 `change` 重命名列，MySQL 8 之前的数据库和 MariaDB 不支持重命名列
 		SkipInitializeWithVersion: false, // 根据当前 MySQL 版本自动配置
 	}), &gorm.Config{
-		SkipDefaultTransaction: false, //默认事务，禁用可以提升30%性能
+		//SkipDefaultTransaction: true, //默认事务，禁用可以提升30%性能
 		//DisableForeignKeyConstraintWhenMigrating: true,  //禁用gorm默认的外键约束
 		NamingStrategy: schema.NamingStrategy{ ////命名策略表、列的命名策略
-			SingularTable: true,    //禁用数据库表名复数
-			TablePrefix:   "blog_", //表名前缀
+			SingularTable: true, //禁用数据库表名复数
+			//TablePrefix:   "blog_", //表名前缀
 		},
 	})
 	if err != nil {
@@ -62,10 +62,10 @@ func NewDatabase() error {
 	sqlDB.SetConnMaxLifetime(time.Hour)
 
 	// //数据库迁移
-	// err = db.Set("gorm:table_options", "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4").AutoMigrate(&User{}, &Article{}, &Tag{})
-	// if err != nil {
-	// 	logrus.WithField("err", err).Error("Failed to migrate database!")
-	// 	return err
-	// }
+	err = db.Set("gorm:table_options", "ENGINE=InnoDB CHARSET=utf8mb4").AutoMigrate(&User{}, &Article{}, &Tag{})
+	if err != nil {
+		logrus.WithField("err", err).Error("Failed to migrate database!")
+		return err
+	}
 	return nil
 }

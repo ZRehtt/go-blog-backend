@@ -1,10 +1,10 @@
 CREATE TABLE IF NOT EXISTS `blog_tag` (
     `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-    `name` varchar(100) DEFAULT '' COMMENT '标签名称',
+    `name` varchar(100) NOT NULL COMMENT '标签名称',
     `created_at` timestamp DEFAULT NULL COMMENT '创建时间',
-    `created_by` varchar(100) DEFAULT '' COMMENT '创建人',
+    `created_by` varchar(100) NOT NULL COMMENT '创建人',
     `updated_at` timestamp DEFAULT NULL COMMENT '修改时间',
-    `updated_by` varchar(100) DEFAULT '' COMMENT '修改人',
+    `updated_by` varchar(100) NOT NULL COMMENT '修改人',
     `deleted_at` timestamp DEFAULT NULL COMMENT '删除时间',
     `state` tinyint(3) unsigned DEFAULT '1' COMMENT '状态0为禁用，1为启用',
     PRIMARY KEY (id)

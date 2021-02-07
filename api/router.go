@@ -13,6 +13,10 @@ func NewRouter() *gin.Engine {
 	router.Use(gin.Logger(), gin.Recovery())
 	gin.SetMode(gin.DebugMode)
 
+	router.POST("/auth", v1.CreateUser)
+
+	router.GET("/auth", v1.GetAuth)
+
 	apiv1 := router.Group("api/v1")
 	{
 		apiv1.GET("/hello", func(c *gin.Context) {
@@ -22,6 +26,7 @@ func NewRouter() *gin.Engine {
 		})
 
 		//------Tags------
+		apiv1.GET("/tags/:id", v1.GetTagByID)
 		apiv1.GET("/tags", v1.GetTags)
 		apiv1.POST("/tags", v1.AddTag)
 		apiv1.PUT("/tags/:id", v1.UpdateTag)

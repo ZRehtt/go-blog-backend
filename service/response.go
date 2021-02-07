@@ -5,11 +5,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-//Gin ...
-type Gin struct {
-	Ctx *gin.Context
-}
-
 //ServiceResponse ...
 type ServiceResponse struct {
 	Code int         `json:"code"`
@@ -18,8 +13,8 @@ type ServiceResponse struct {
 }
 
 //Response 统一响应信息
-func (g *Gin) Response(httpCode, errCode int, data interface{}) {
-	g.Ctx.JSON(httpCode, ServiceResponse{
+func Response(ctx *gin.Context, httpCode, errCode int, data interface{}) {
+	ctx.JSON(httpCode, ServiceResponse{
 		Code: errCode,
 		Msg:  utils.GetMessage(errCode),
 		Data: data,
