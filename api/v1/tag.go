@@ -38,7 +38,7 @@ func GetTags(c *gin.Context) {
 	}
 
 	code := utils.INVALID_PARAMS
-	tags, err := models.GetTagsByPage(page)
+	tags, err := models.GetTagsByPage(page.PageNumber, page.PageSize)
 	if err != nil {
 		code = utils.ERROR
 		logrus.WithError(err).Error("Con't get tags by page")
@@ -69,8 +69,8 @@ func GetTags(c *gin.Context) {
 	// })
 }
 
-//AddTag 新建标签 /api/v1/tags
-func AddTag(c *gin.Context) {
+//CreateTag 新建标签 /api/v1/tags
+func CreateTag(c *gin.Context) {
 	tag := models.Tag{}
 	err := c.ShouldBind(&tag)
 	if err != nil {
@@ -87,7 +87,7 @@ func AddTag(c *gin.Context) {
 	if !valid.HasErrors() {
 		if ok, _ := models.ExistTagByName(tag.Name); !ok {
 			code = utils.SUCCESS
-			err = models.AddTag(tag)
+			err = models.CreateTag(&tag)
 			if err != nil {
 				logrus.WithError(err).Error("Error add tag")
 				return
@@ -100,12 +100,6 @@ func AddTag(c *gin.Context) {
 	logrus.WithField("tag", tag).Info("Added Tag!")
 
 	service.Response(c, http.StatusCreated, code, "标签添加成功！")
-
-	// c.JSON(http.StatusCreated, gin.H{
-	// 	"code": code,
-	// 	"msg":  utils.GetMessage(code),
-	// 	"data": make(map[string]string),
-	// })
 }
 
 //UpdateTag 更新指定标签 /api/v1/tags/{id}
@@ -147,27 +141,20 @@ func DeleteTag(c *gin.Context) {
 
 	code := utils.INVALID_PARAMS
 	if !valid.HasErrors() {
+		err := models.DeleteTag(id)
+		if err != nil {
+			code = utils.ERROR
+			logrus.WithError(err).Error("Error delete tag")
+			return
+		}
 		code = utils.SUCCESS
-		if ok, _ := models.ExistTagByID(id); ok {
-			code = utils.ERROR_EXIST_TAG
-			err := models.DeleteTag(id)
-			if err != nil {
-				code = utils.ERROR
-				logrus.WithError(err).Error("Error delete tag")
-				return
-			}
-		} else {
-			code = utils.ERROR_NOT_EXIST_TAG
+	} else {
+		for _, err := range valid.Errors {
+			logrus.Infof("err.key: %s, err.message: %s\n", err.Key, err.Message)
 		}
 	}
 
 	logrus.WithField("tagID", id).Info("deleted Tag!")
 
 	service.Response(c, http.StatusOK, code, "标签删除成功！")
-
-	// c.JSON(http.StatusOK, gin.H{
-	// 	"code": code,
-	// 	"msg":  utils.GetMessage(code),
-	// 	"data": make(map[string]string),
-	// })
 }

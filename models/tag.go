@@ -22,35 +22,31 @@ type TagPage struct {
 	Tag
 }
 
-//GetTags 根据分页和约束获取标签列表
-// func GetTags(pageNumber, pageSize int, maps interface{}) ([]*Tag, error) {
-// 	var tags []*Tag
-// 	if pageSize > 0 && pageNumber > 0 {
-// 		err = db.Where(maps).Find(&tags).Offset(pageSize).Limit(pageNumber).Error
-// 	} else {
-// 		err = db.Table("tag").Where(maps).Find(&tags).Error
-// 	}
-// 	if err != nil && err != gorm.ErrRecordNotFound {
-// 		return nil, err
-// 	}
-// 	return tags, nil
-// }
+//CreateTag 新增标签
+func CreateTag(tag *Tag) error {
+	err := db.Table("tag").Select("Name", "CreatedBy", "UpdatedBy", "State").Create(&tag).Error
+	if err != nil {
+		logrus.WithError(err).Error("Con't create tag in db")
+		return err
+	}
+	return nil
+}
 
 //GetTagsByPage 获取指定页码和数量的标签
-func GetTagsByPage(page TagPage) ([]Tag, error) {
+func GetTagsByPage(pageNumber, pageSize int) ([]Tag, error) {
 	var tags []Tag
-	pageSet := (page.PageNumber - 1) * page.PageSize
-	//
+
 	err := db.Select(
 		"id", "created_at", "updated_at", "deleted_at", "name", "count(article_id) as articles",
 	).Table("tag").
 		Preload("Articles").
 		Joins("left join article_tag on tag.id = article_tag.tag_id").
 		Group("id").
-		Offset(pageSet).Limit(page.PageSize).
+		Offset(pageNumber).Limit(pageSize).
 		//标签根据文章数量排序，数量相同时再按名称排序
 		Order("articles desc, name desc").Find(&tags).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
+		logrus.WithError(err).Error("Con't get tags by page in db")
 		return nil, err
 	}
 	return tags, nil
@@ -75,6 +71,7 @@ func ExistTagByName(name string) (bool, error) {
 	var tag Tag
 	err := db.Select("id").Where("name = ?", name).First(&tag).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
+		logrus.WithError(err).Error("Con't exist tag by name in db")
 		return false, err
 	}
 	if tag.ID > 0 {
@@ -83,29 +80,23 @@ func ExistTagByName(name string) (bool, error) {
 	return false, nil
 }
 
-//AddTag 添加标签
-func AddTag(articleTag Tag) error {
-	if err := db.Table("tag").Create(&articleTag).Error; err != nil {
-		return err
-	}
-	return nil
-}
-
 //GetTagByID 根据id获取标签
 func GetTagByID(id int) (*Tag, error) {
-	tag := &Tag{}
+	tag := Tag{}
 	err := db.Table("tag").Where("id = ?", id).First(&tag).Error
 	if err != nil {
+		logrus.WithError(err).Error("Con't get tag by id in db")
 		return nil, err
 	}
-	return tag, nil
+	return &tag, nil
 }
 
 //ExistTagByID 根据ID确定标签是否存在
 func ExistTagByID(id int) (bool, error) {
 	var tag Tag
-	err := db.Table("tag").Select("id").Where("id = ?", id).First(&tag).Error
+	err := db.Table("tag").Select("id").Where("id = ? AND deleted_at IS NULL", id).First(&tag).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
+		logrus.WithError(err).Error("Con't get tag by id in db")
 		return false, err
 	}
 	if tag.ID > 0 {
@@ -116,8 +107,9 @@ func ExistTagByID(id int) (bool, error) {
 
 //DeleteTag 删除标签
 func DeleteTag(id int) error {
-	err := db.Where("id = ?", id).Delete(&Tag{}).Error
+	err := db.Where("id = ? AND deleted_at IS NULL", id).Delete(&Tag{}).Error
 	if err != nil {
+		logrus.WithError(err).Error("Con't delete tag in db")
 		return err
 	}
 	return nil
@@ -125,8 +117,9 @@ func DeleteTag(id int) error {
 
 //UpdateTag 更新标签，忽略created_at字段
 func UpdateTag(id int, tags Tag) error {
-	err := db.Table("tag").Where("id").Omit("created_at").Updates(&tags).Error
+	err := db.Table("tag").Where("id = ? AND deleted_at IS NULL", id).Omit("created_at").Updates(&tags).Error
 	if err != nil {
+		logrus.WithError(err).Error("Con't update tag in db")
 		return err
 	}
 	return nil

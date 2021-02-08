@@ -73,8 +73,8 @@ func GetArticles(c *gin.Context) {
 	service.Response(c, http.StatusOK, code, data)
 }
 
-//AddArticle 新增文章
-func AddArticle(c *gin.Context) {
+//CreateArticle 新增文章
+func CreateArticle(c *gin.Context) {
 	article := models.Article{}
 	if err := c.ShouldBind(&article); err != nil {
 		logrus.WithError(err).Error("Error binding article")
@@ -99,7 +99,7 @@ func AddArticle(c *gin.Context) {
 		// 	return
 		// }
 		// article.UserID = user.ID
-		err := models.AddArticle(article)
+		err := models.CreateArticle(&article)
 		if err != nil {
 			logrus.WithError(err).Error("Failed to get article from user")
 			return
@@ -130,6 +130,8 @@ func UpdateArticle(c *gin.Context) {
 		return
 	}
 	valid.Min(id, 1, "id").Message("ID必须大于0")
+
+	//article.UserID = uint(id)
 
 	code := utils.INVALID_PARAMS
 	if !valid.HasErrors() {
