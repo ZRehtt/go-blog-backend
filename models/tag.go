@@ -26,7 +26,7 @@ type TagPage struct {
 func CreateTag(tag *Tag) error {
 	err := db.Table("tag").Select("Name", "CreatedBy", "UpdatedBy", "State").Create(&tag).Error
 	if err != nil {
-		logrus.WithError(err).Error("Con't create tag in db")
+		logrus.WithError(err).Error("Can't create tag in db")
 		return err
 	}
 	return nil
@@ -46,7 +46,7 @@ func GetTagsByPage(pageNumber, pageSize int) ([]Tag, error) {
 		//标签根据文章数量排序，数量相同时再按名称排序
 		Order("articles desc, name desc").Find(&tags).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
-		logrus.WithError(err).Error("Con't get tags by page in db")
+		logrus.WithError(err).Error("Can't get tags by page in db")
 		return nil, err
 	}
 	return tags, nil
@@ -71,7 +71,7 @@ func ExistTagByName(name string) (bool, error) {
 	var tag Tag
 	err := db.Select("id").Where("name = ?", name).First(&tag).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
-		logrus.WithError(err).Error("Con't exist tag by name in db")
+		logrus.WithError(err).Error("Can't exist tag by name in db")
 		return false, err
 	}
 	if tag.ID > 0 {
@@ -85,7 +85,7 @@ func GetTagByID(id int) (*Tag, error) {
 	tag := Tag{}
 	err := db.Table("tag").Where("id = ?", id).First(&tag).Error
 	if err != nil {
-		logrus.WithError(err).Error("Con't get tag by id in db")
+		logrus.WithError(err).Error("Can't get tag by id in db")
 		return nil, err
 	}
 	return &tag, nil
@@ -96,7 +96,7 @@ func ExistTagByID(id int) (bool, error) {
 	var tag Tag
 	err := db.Table("tag").Select("id").Where("id = ? AND deleted_at IS NULL", id).First(&tag).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
-		logrus.WithError(err).Error("Con't get tag by id in db")
+		logrus.WithError(err).Error("Can't get tag by id in db")
 		return false, err
 	}
 	if tag.ID > 0 {
@@ -109,7 +109,7 @@ func ExistTagByID(id int) (bool, error) {
 func DeleteTag(id int) error {
 	err := db.Where("id = ? AND deleted_at IS NULL", id).Delete(&Tag{}).Error
 	if err != nil {
-		logrus.WithError(err).Error("Con't delete tag in db")
+		logrus.WithError(err).Error("Can't delete tag in db")
 		return err
 	}
 	return nil
@@ -119,7 +119,7 @@ func DeleteTag(id int) error {
 func UpdateTag(id int, tags Tag) error {
 	err := db.Table("tag").Where("id = ? AND deleted_at IS NULL", id).Omit("created_at").Updates(&tags).Error
 	if err != nil {
-		logrus.WithError(err).Error("Con't update tag in db")
+		logrus.WithError(err).Error("Can't update tag in db")
 		return err
 	}
 	return nil

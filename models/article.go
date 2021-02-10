@@ -36,7 +36,7 @@ func CreateArticle(article *Article) error {
 	//对于many2many关联，创建或者更新时会先Upsert关联，可以使用select和Omit跳过自动保存
 	err := db.Table("article").Create(article).Error
 	if err != nil {
-		logrus.WithError(err).Error("Con't create article in db")
+		logrus.WithError(err).Error("Can't create article in db")
 		return err
 	}
 	return nil
@@ -47,7 +47,7 @@ func GetArticleByID(id int) (*Article, error) {
 	article := Article{}
 	err := db.Table("article").Preload("Tags").Where("id = ? AND deleted_at IS NULL", id).First(&article).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
-		logrus.WithError(err).Error("Con't find article by ID in db")
+		logrus.WithError(err).Error("Can't find article by ID in db")
 		return nil, err
 	}
 	return &article, nil
@@ -61,7 +61,7 @@ func GetArticleTotal(page ArticlePage) (int64, error) {
 		query = query.Where("title like ?", "%"+page.Title+"%")
 	}
 	if err := query.Count(&count).Error; err != nil {
-		logrus.WithError(err).Error("Con't get articles total in db")
+		logrus.WithError(err).Error("Can't get articles total in db")
 		return 0, err
 	}
 	return count, nil
@@ -79,7 +79,7 @@ func GetArticlesByPage(pageNumber, pageSize int) ([]*Article, error) {
 		//文章根据创建时间排序
 		Order("created_at desc").Find(&articles).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
-		logrus.WithError(err).Error("Con't get articles by page in db")
+		logrus.WithError(err).Error("Can't get articles by page in db")
 		return nil, err
 	}
 	return articles, nil
@@ -94,7 +94,7 @@ func UpdateArticle(article Article) error {
 		}
 		//更新文章
 		if err = tx.Updates(&article).Error; err != nil {
-			logrus.WithError(err).Error("Con't update article in db")
+			logrus.WithError(err).Error("Can't update article in db")
 			return err
 		}
 		return nil

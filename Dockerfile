@@ -11,7 +11,7 @@ ENV GO111MODULE=on \
 WORKDIR /build
 
 # 创建一个app-runner用户，-D表示无密码
-# RUN adduser -u 10001 -D app-runner
+# RUN useradd -u 10001 -D app-runner
 
 # 复制项目中的go.mod和go.sum文件并下载依赖信息
 COPY go.mod .

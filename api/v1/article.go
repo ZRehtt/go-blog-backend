@@ -35,7 +35,7 @@ func GetArticleByID(c *gin.Context) {
 		}
 	}
 
-	logrus.WithField("id", id).Info("getted Article!")
+	logrus.WithField("id", id).Info("got Article!")
 
 	service.Response(c, http.StatusOK, code, *article)
 }
@@ -47,7 +47,7 @@ func GetArticles(c *gin.Context) {
 
 	err := c.ShouldBind(&page)
 	if err != nil {
-		logrus.WithError(err).Error("Error binding apge")
+		logrus.WithError(err).Error("Error binding page")
 		return
 	}
 	code := utils.SUCCESS
@@ -68,7 +68,7 @@ func GetArticles(c *gin.Context) {
 	}
 	data["count"] = count
 
-	logrus.WithField("page", page).Info("getted articles by page!")
+	logrus.WithField("page", page).Info("got articles by page!")
 
 	service.Response(c, http.StatusOK, code, data)
 }
