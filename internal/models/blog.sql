@@ -1,7 +1,7 @@
 DROP DATABASE IF EXISTS `my_blog`;
 CREATE DATABASE `my_blog`;
 
-CREATE TABLE IF NOT EXISTS `blog_tag` (
+CREATE TABLE IF NOT EXISTS `tag` (
     `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
     `name` varchar(100) NOT NULL COMMENT '标签名称',
     `created_at` timestamp DEFAULT NULL COMMENT '创建时间',
@@ -15,11 +15,11 @@ CREATE TABLE IF NOT EXISTS `blog_tag` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='文章标签管理';
 
 
-CREATE TABLE IF NOT EXISTS `blog_article` (
+CREATE TABLE IF NOT EXISTS `article` (
     `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
     -- `tag_id` int(10) UNSIGNED DEFAULT '0' COMMENT '标签ID',
     `title` varchar(100) DEFAULT '' COMMENT '文章标题',
-    `description` varchar(255) DEFAULT '' COMMENT '文章简述',
+    `desc` varchar(255) DEFAULT '' COMMENT '文章简述',
     `cover_url` varchar(255) DEFAULT '' COMMENT '封面图片地址', -- 新增封面图片
     `content` longtext COMMENT '文章内容',
     `created_at` timestamp DEFAULT NULL COMMENT '创建时间',
@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS `blog_article` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='文章管理';
 
 
-CREATE TABLE IF NOT EXISTS `blog_author` (
+CREATE TABLE IF NOT EXISTS `auth` (
     `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
     `app_key` varchar(20) DEFAULT '' COMMENT 'Key',
     `app_secret` varchar(50) DEFAULT '' COMMENT 'Secret',
@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS `blog_author` (
     PRIMARY KEY (`id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='认证管理';
 
-CREATE TABLE IF NOT EXISTS `blog_article_tag` (
+CREATE TABLE IF NOT EXISTS `article_tag` (
     `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
     `article_id` int(10) NOT NULL COMMENT '文章ID',
     `tag_id` int(10) NOT NULL DEFAULT '0' COMMENT '标签ID',

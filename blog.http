@@ -1,0 +1,39 @@
+@host = http://localhost:8090
+
+###
+POST {{host}}/api/v1/tags
+Content-Type: application/json
+{
+    "name": "Golang",
+    "createdBy": "dashu",
+    "state": 1
+}
+
+###
+
+GET {{host}}/api/v1/tags
+
+###
+
+PUT {{host}}/api/v1/tags/1
+
+###
+
+PATCH {{host}}/api/v1/tags/1/state
+
+###
+
+DELETE {{host}}/api/v1/tags/1
+
+
+###
+POST {{host}}/api/v1/articles
+Content-Type: application/json
+{
+    "title": "Golang学习",
+    "desc": "这是一篇Golang基础学习的文章",
+    "coverURL": "",
+    "content": "Golang是一门静态强类型、编译型、并发型的高级编程语言",
+    "createdBy": "dashu",
+    "state": 1
+}

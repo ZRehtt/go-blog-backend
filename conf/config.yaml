@@ -1,9 +1,11 @@
 app:
-  mode: debug
+  mode: "debug"
+  host: "127.0.0.1"
   page_size: 10
+  version: "0.0.1"
 
 server:
-  port: 8090
+  port: "8090"
   read_timeout: 60
   write_timeout: 60
 
@@ -11,12 +13,18 @@ database:
   type: "mysql"
   user: "root"
   password: "root312"
-  port: 3306
+  port: "3306"
   dbname: "my_blog"
   config: "charset=utf8mb4&parseTime=True&loc=Local"
+  max_idle_conns: 20 # 最大空闲连接数
+  max_open_conns: 200 # 最大连接数
 
 redis:
   port: 6379
   db: 0
   password: ""
 
+JWT:
+  secret: "rehttz"
+  issuer: "blog-backend" # 令牌签发人
+  expires_at: 7200 # 过期时间 单位：秒，即2h
