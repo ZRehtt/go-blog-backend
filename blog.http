@@ -11,15 +11,11 @@ Content-Type: application/json
 
 ###
 
-GET {{host}}/api/v1/tags
+GET {{host}}/api/v1/tags?page=1&page_size=
 
 ###
 
 PUT {{host}}/api/v1/tags/1
-
-###
-
-PATCH {{host}}/api/v1/tags/1/state
 
 ###
 

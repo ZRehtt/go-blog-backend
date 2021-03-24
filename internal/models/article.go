@@ -7,5 +7,5 @@ type Article struct {
 	Desc     string `json:"desc"`
 	Content  string `json:"content"`
 	CoverURL string `json:"coverURL"`
-	State    int8   `json:"state"`
+	State    uint8   `json:"state"`
 }

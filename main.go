@@ -2,20 +2,21 @@ package main
 
 import (
 	"flag"
+	"net/http"
+	"strings"
+	"time"
+
 	"github.com/ZRehtt/go-blog-backend/globals"
 	"github.com/ZRehtt/go-blog-backend/internal/models"
 	"github.com/ZRehtt/go-blog-backend/internal/routers"
 	"github.com/ZRehtt/go-blog-backend/pkg/logger"
 	"github.com/ZRehtt/go-blog-backend/pkg/setting"
 	"github.com/sirupsen/logrus"
-	"net/http"
-	"strings"
-	"time"
 )
 
 var (
 	config string
-	mode string
+	mode   string
 )
 
 //
@@ -47,18 +48,17 @@ func main() {
 	router := routers.NewRouter()
 
 	server := &http.Server{
-		Addr: ":" + globals.ServerSetting.Port,
-		Handler: router,
-		ReadTimeout: globals.ServerSetting.ReadTimeout * time.Second, //允许读取的最大时间
-		WriteTimeout: globals.ServerSetting.WriteTimeout * time.Second, //允许写入的最大时间
-		MaxHeaderBytes: 1 << 20, //请求头的最大字节数
+		Addr:           ":" + globals.ServerSetting.Port,
+		Handler:        router,
+		ReadTimeout:    globals.ServerSetting.ReadTimeout * time.Second,  //允许读取的最大时间
+		WriteTimeout:   globals.ServerSetting.WriteTimeout * time.Second, //允许写入的最大时间
+		MaxHeaderBytes: 1 << 20,                                          //请求头的最大字节数
 	}
 
 	if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 		logrus.WithError(err).Error("Failed to listen server!")
 	}
 }
-
 
 func setupFlag() error {
 	flag.StringVar(&config, "config", "conf/", "指定要使用的配置文件路径")
@@ -92,4 +92,3 @@ func setupSetting() error {
 
 	return nil
 }
-

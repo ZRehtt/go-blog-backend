@@ -18,14 +18,14 @@ type Config struct {
 //AppConfig 应用相关配置信息
 type AppConfig struct {
 	PageSize int    `yaml:"page_size"`
-	Mode string `yaml:"mode"`
-	Host string `yaml:"host"`
-	Version string `yaml:"version"`
+	Mode     string `yaml:"mode"`
+	Host     string `yaml:"host"`
+	Version  string `yaml:"version"`
 }
 
 //ServerConfig 服务相关配置信息
 type ServerConfig struct {
-	Port         string           `yaml:"port"`
+	Port         string        `yaml:"port"`
 	ReadTimeout  time.Duration `yaml:"read_timeout"`
 	WriteTimeout time.Duration `yaml:"write_timeout"`
 }
@@ -37,7 +37,7 @@ type DatabaseConfig struct {
 	Type         string `yaml:"type"`
 	User         string `yaml:"user"`
 	Password     string `yaml:"password"`
-	Port         string    `yaml:"port"`
+	Port         string `yaml:"port"`
 	DBName       string `yaml:"dbname"`
 	Config       string `yaml:"config"`
 }

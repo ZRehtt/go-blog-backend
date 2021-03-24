@@ -9,8 +9,8 @@ import (
 var (
 	GDB *gorm.DB
 
-	ServerSetting *setting.ServerConfig
-	AppSetting *setting.AppConfig
+	ServerSetting   *setting.ServerConfig
+	AppSetting      *setting.AppConfig
 	DatabaseSetting *setting.DatabaseConfig
-	JWTSetting *setting.JWTConfig
+	JWTSetting      *setting.JWTConfig
 )

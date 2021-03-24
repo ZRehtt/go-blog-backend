@@ -1,6 +1,7 @@
 package routers
 
 import (
+	v1 "github.com/ZRehtt/go-blog-backend/internal/routers/api/v1"
 	"github.com/gin-gonic/gin"
 )
 
@@ -10,22 +11,25 @@ func NewRouter() *gin.Engine {
 	r.Use(gin.Logger())
 	r.Use(gin.Recovery())
 
+	article := v1.NewArticle()
+	tag := v1.NewTag()
+
 	r.GET("/version", Version)
 
 	apiv1 := r.Group("/api/v1")
 	{
-		apiv1.POST("/tags")
-		apiv1.GET("/tags")
-		apiv1.PUT("/tags/:id")
-		apiv1.PATCH("/tags/:id/state")
-		apiv1.DELETE("/tags/:id")
+		apiv1.POST("/tags", tag.CreateTag)
+		apiv1.GET("/tags", tag.ListTags)
+		apiv1.PUT("/tags/:id", tag.UpdateTag)
+		//apiv1.PATCH("/tags/:id/state")
+		apiv1.DELETE("/tags/:id", tag.DeleteTag)
 
-		apiv1.POST("/articles")
-		apiv1.GET("/articles")
-		apiv1.GET("/articles/:id")
-		apiv1.PUT("/articles/:id")
-		apiv1.PATCH("/articles/:id/state")
-		apiv1.DELETE("/articles/:id")
+		apiv1.POST("/articles", article.CreateArticle)
+		apiv1.GET("/articles", article.ListArticles)
+		apiv1.GET("/articles/:id", article.GetArticleByID)
+		apiv1.PUT("/articles/:id", article.UpdateArticle)
+		//apiv1.PATCH("/articles/:id/state")
+		apiv1.DELETE("/articles/:id", article.DeleteArticle)
 	}
 
 	return r
