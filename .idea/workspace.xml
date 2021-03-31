@@ -20,23 +20,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="48832c7d-3ec4-494d-8953-5143f75fb6f9" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/pkg/app/pagination.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pkg/app/response.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pkg/utils/convert.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/blog.http" beforeDir="false" afterPath="$PROJECT_DIR$/blog.http" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/globals/global.go" beforeDir="false" afterPath="$PROJECT_DIR$/globals/global.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/models/article.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/models/article.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/models/auth.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/models/auth.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/models/model.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/models/model.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/internal/models/tag.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/models/tag.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/routers/api/v1/tag.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/routers/api/v1/tag.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/internal/routers/router.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/routers/router.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/service/article.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/service/article.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/service/service.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/service/service.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/service/tag.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/service/tag.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/middleware/jwt.go" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/pkg/app/jwt.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/app/jwt.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/setting/config.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/setting/config.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/settings/logger.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/settings/setting.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/str.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/errcode/code.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/errcode/code.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/article.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/response.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/errorMsg.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/jwt.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/pagination.go" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -72,7 +71,7 @@
     <property name="go.import.settings.migrated" value="true" />
     <property name="go.sdk.automatically.set" value="true" />
     <property name="go.tried.to.enable.integration.vgo.integrator" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="D:/go/gin-blog" />
     <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors" />
   </component>
   <component name="RunManager">
@@ -119,10 +118,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="552" y="179" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1616500926789" />
-    <state x="740" y="276" key="FileChooserDialogImpl" timestamp="1612962578527">
+    <state x="740" y="276" key="FileChooserDialogImpl" timestamp="1617077545308">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="740" y="276" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1612962578527" />
+    <state x="740" y="276" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1617077545308" />
     <state width="1882" height="344" key="GridCell.Tab.0.bottom" timestamp="1616508686166">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>

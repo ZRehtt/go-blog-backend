@@ -12,19 +12,19 @@ import (
 )
 
 var (
-	gdb *gorm.DB
+	db  *gorm.DB
 	err error
 )
 
 //Model 公共数据模型
 type Model struct {
 	ID        uint32          `json:"id" gorm:"primaryKey"`
-	CreatedAt time.Time       `json:"createdAt"`
-	UpdatedAt time.Time       `json:"updatedAt"`
-	DeletedAt *gorm.DeletedAt `json:"deletedAt"`
-	CreatedBy string          `json:"createdBy"`
-	UpdatedBy string          `json:"updatedBy"`
-	IsDeleted uint8           `json:"isDeleted"`
+	CreatedAt time.Time       `json:"createdAt" gorm:"comment:创建时间"`
+	UpdatedAt time.Time       `json:"updatedAt" gorm:"comment:更新时间"`
+	DeletedAt *gorm.DeletedAt `json:"deletedAt" gorm:"index;comment:删除时间"`
+	CreatedBy string          `json:"createdBy" gorm:"type:varchar(100);not null;comment:创建者"`
+	UpdatedBy string          `json:"updatedBy" gorm:"type:varchar(100);comment:更新者"`
+	IsDeleted uint8           `json:"isDeleted" gorm:"comment:是否删除，0表示未删除，1表示已删除"`
 }
 
 //NewDatabase 数据库初始化器
@@ -33,7 +33,7 @@ func NewDatabase(dbSetting *setting.DatabaseConfig) error {
 	dsn := dbSetting.User + ":" + dbSetting.Password + "@tcp(:" + dbSetting.Port + ")/" + dbSetting.DBName + "?" + dbSetting.Config
 
 	//GORM驱动
-	gdb, err = gorm.Open(mysql.New(mysql.Config{
+	db, err = gorm.Open(mysql.New(mysql.Config{
 		DriverName:        driverName,
 		DSN:               dsn,
 		DefaultStringSize: 256, // string 类型字段的默认长度
@@ -55,7 +55,7 @@ func NewDatabase(dbSetting *setting.DatabaseConfig) error {
 	}
 
 	//数据库连接池
-	sqlDB, err := gdb.DB()
+	sqlDB, err := db.DB()
 	if err != nil {
 		logrus.WithField("err", err).Error("Failed to get database connection pool!")
 		return err
@@ -69,12 +69,12 @@ func NewDatabase(dbSetting *setting.DatabaseConfig) error {
 	// 设置连接可复用的最大时间。
 	sqlDB.SetConnMaxLifetime(time.Hour)
 
-	////数据库迁移
-	//err = db.Set("gorm:table_options", "ENGINE=InnoDB CHARSET=utf8mb4").AutoMigrate(&Auth{}, &Article{}, &Tag{}, &ArticleTag{})
-	//if err != nil {
-	//	logrus.WithField("err", err).Error("Failed to migrate database!")
-	//	return err
-	//}
+	//数据库迁移
+	err = db.Set("gorm:table_options", "ENGINE=InnoDB CHARSET=utf8mb4").AutoMigrate(&Auth{}, &Article{}, &Tag{})
+	if err != nil {
+		logrus.WithField("err", err).Error("Failed to migrate database!")
+		return err
+	}
 
 	return nil
 }

@@ -10,9 +10,9 @@ type Auth struct {
 }
 
 //GetAuth 获取单个认证信息
-func (d *database) GetAuth(a Auth) (*Auth, error) {
+func GetAuth(a Auth) (*Auth, error) {
 	var auth Auth
-	db := d.db.Where("app_key = ? AND app_secret = ? AND is_deleted = ?", a.AppKey, a.AppSecret, 0)
+	db := db.Where("app_key = ? AND app_secret = ? AND is_deleted = ?", a.AppKey, a.AppSecret, 0)
 	err := db.First(&auth).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
 		return nil, err

@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"net/http"
 	"strings"
 	"time"
@@ -11,7 +12,7 @@ import (
 	"github.com/ZRehtt/go-blog-backend/internal/routers"
 	"github.com/ZRehtt/go-blog-backend/pkg/logger"
 	"github.com/ZRehtt/go-blog-backend/pkg/setting"
-	"github.com/sirupsen/logrus"
+	"go.uber.org/zap"
 )
 
 var (
@@ -21,25 +22,21 @@ var (
 
 //
 func init() {
-	//启动自定义日志
-	logger.NewLogger()
-	logrus.WithField("logger", "logger").Info("Logger is ready!")
-
 	err := setupFlag()
 	if err != nil {
-		logrus.Printf("init setupFlag with error: %v\n", err)
+		fmt.Printf("failed to init setup flag: %v\n", err)
 		return
 	}
-
-	err = setupSetting()
-	if err != nil {
-		logrus.Printf("init setupSetting with error: %v\n", err)
+	if err = setupSetting(); err != nil {
+		fmt.Printf("failed to init setting: %v\n", err)
 		return
 	}
-
-	err = models.NewDatabase(globals.DatabaseSetting)
-	if err != nil {
-		logrus.WithError(err).Errorf("Failed to connect database!")
+	if err = logger.NewLogger(globals.LogSetting); err != nil {
+		fmt.Printf("failed to init logger: %v\n", err)
+		return
+	}
+	if err = models.NewDatabase(globals.DatabaseSetting); err != nil {
+		zap.L().Error("failed to init database", zap.Any("err", err))
 		return
 	}
 }
@@ -56,7 +53,7 @@ func main() {
 	}
 
 	if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-		logrus.WithError(err).Error("Failed to listen server!")
+		zap.L().Error("Failed to listen server!", zap.Any("err", err))
 	}
 }
 
@@ -88,7 +85,15 @@ func setupSetting() error {
 		return err
 	}
 
+	err = set.ReadConfig("log", &globals.LogSetting)
+	if err != nil {
+		return err
+	}
+
 	err = set.ReadConfig("JWT", &globals.JWTSetting)
+	if err != nil {
+		return err
+	}
 
 	return nil
 }

@@ -4,7 +4,7 @@ import (
 	"errors"
 
 	"github.com/ZRehtt/go-blog-backend/internal/models"
-	"github.com/sirupsen/logrus"
+	"go.uber.org/zap"
 )
 
 //AuthRequest 认证信息接口入参校验
@@ -14,10 +14,10 @@ type AuthRequest struct {
 }
 
 //CheckAuth 检验auth是否已存在
-func (s *Service) CheckAuth(param *AuthRequest) error {
-	auth, err := models.New(s.db).GetAuth(models.Auth{AppKey: param.AppKey, AppSecret: param.AppSecret})
+func CheckAuth(param *AuthRequest) error {
+	auth, err := models.GetAuth(models.Auth{AppKey: param.AppKey, AppSecret: param.AppSecret})
 	if err != nil {
-		logrus.WithError(err).Error("failed to get auth by request.")
+		zap.L().Error("failed to get auth by request.", zap.Any("err", err))
 		return err
 	}
 	if auth.ID > 0 {

@@ -1,53 +1,38 @@
 package app
 
 import (
-	"github.com/ZRehtt/go-blog-backend/globals"
-	"github.com/ZRehtt/go-blog-backend/pkg/errcode"
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 )
 
 //统一接口响应处理信息
 
-//
 type Response struct {
 	Ctx *gin.Context
+	//状态码
+	Code int
+	//响应信息
+	Msg string
+	//响应数据
+	Data interface{}
 }
 
-type Pager struct {
-	Page      int `json:"page"`
-	PageSize  int `json:"pageSize"`
-	TotalRows int64 `json:"totalRows"`
-}
-
-func NewResponse(ctx *gin.Context) *Response {
-	return &Response{ctx}
-}
-
-func (r *Response) ToResponse(code int, data interface{}) {
-	if data == nil {
-		data = gin.H{}
-	}
-
-	r.Ctx.JSON(code, data)
-}
-
-func (r *Response) ToResponseList(code int, list interface{}, totalRows int64) {
-	r.Ctx.JSON(code, gin.H{
-		"list": list,
-		"pager": Pager{
-			Page:      GetPage(r.Ctx),
-			PageSize:  globals.AppSetting.PageSize,
-			TotalRows: totalRows,
-		},
+//NewResponse ...
+func NewResponse(ctx *gin.Context, httpCode, code int, msg string, data interface{}) {
+	ctx.JSON(httpCode, gin.H{
+		"code": code,
+		"msg":  msg,
+		"data": data,
 	})
 }
 
-func (r *Response) ToErrorResponse(err *errcode.Error) {
-	response := gin.H{"code": err.Code(), "msg": err.Msg()}
-	details := err.Details()
-	if len(details) > 0 {
-		response["details"] = details
-	}
+//SuccessResponse 返回成功的响应
+func SuccessResponse(ctx *gin.Context, code int, data interface{}) {
+	NewResponse(ctx, http.StatusOK, code, GetCodeMsg(code), data)
+}
 
-	r.Ctx.JSON(err.StatusCode(), response)
+//ErrorResponse 返回错误响应信息
+func ErrorResponse(ctx *gin.Context, httpCode, code int) {
+	NewResponse(ctx, httpCode, code, GetCodeMsg(code), "")
 }

@@ -12,6 +12,7 @@ type Config struct {
 	*AppConfig      `mapstructure:"app"`
 	*ServerConfig   `mapstructure:"server"`
 	*DatabaseConfig `mapstructure:"database"`
+	*LogConfig      `mapstructure:"log"`
 	*JWTConfig      `mapstructure:"JWT"`
 }
 
@@ -40,6 +41,16 @@ type DatabaseConfig struct {
 	Port         string `yaml:"port"`
 	DBName       string `yaml:"dbname"`
 	Config       string `yaml:"config"`
+}
+
+//LogConfig 日志配置信息
+type LogConfig struct {
+	Level      string `yaml:"level"`
+	FileName   string `yaml:"filename"`
+	MaxSize    int    `yaml:"max_size"`
+	MaxAge     int    `yaml:"max_age"`
+	MaxBackups int    `yaml:"max_backups"`
+	Compress   bool   `yaml:"compress"`
 }
 
 //JWTConfig jwt令牌相关配置

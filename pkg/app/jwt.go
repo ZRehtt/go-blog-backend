@@ -6,7 +6,7 @@ import (
 	"github.com/ZRehtt/go-blog-backend/globals"
 	"github.com/ZRehtt/go-blog-backend/pkg/utils"
 	"github.com/dgrijalva/jwt-go"
-	"github.com/sirupsen/logrus"
+	"go.uber.org/zap"
 )
 
 //MyClaims 自定义认证信息，包含密钥，签发人
@@ -38,20 +38,20 @@ func GenerateToken(appKey, appSecret string) (string, error) {
 	//生成完整的签名字符串
 	token, err := tokenClaims.SignedString(GetJWTSecret())
 	if err != nil {
-		logrus.WithError(err).Error("failed to get token!")
+		zap.L().Error("failed to get token!", zap.Any("err", err))
 		return "", err
 	}
 	return token, nil
 }
 
-//ParseToken 解析和检验Token
+//ParseToken 解析和检验Token，根据token值解析到自定义的claims对象信息
 func ParseToken(token string) (*MyClaims, error) {
 	//用于解析鉴权声明，方法内部主要是具体的解码和校验的过程，最终返回*jwt.Token
 	tokenClaims, err := jwt.ParseWithClaims(token, &MyClaims{}, func(token *jwt.Token) (interface{}, error) {
 		return GetJWTSecret(), nil
 	})
 	if err != nil {
-		logrus.WithError(err).Error("Failed to parse token with claim!")
+		zap.L().Error("Failed to parse token with claim!", zap.Any("err", err))
 		return nil, err
 	}
 	if tokenClaims != nil {

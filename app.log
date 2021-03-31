@@ -1,0 +1,3 @@
+{"level":"ERROR","time":"2021-03-31T22:27:08.218+0800","caller":"go-blog-backend/main.go:39","msg":"failed to init database","err":"Error 1049: Unknown database 'go_blog'"}
+{"level":"ERROR","time":"2021-03-31T22:29:10.144+0800","caller":"v1/tag.go:27","msg":"failed to bind tag list param.","err":"Key: 'CountTagRequest.Name' Error:Field validation for 'Name' failed on the 'min' tag"}
+{"level":"ERROR","time":"2021-03-31T22:30:09.566+0800","caller":"v1/tag.go:92","msg":"failed to bind tag update param.","err":"Key: 'UpdateTagRequest.Name' Error:Field validation for 'Name' failed on the 'min' tag"}

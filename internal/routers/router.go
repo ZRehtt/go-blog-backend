@@ -1,6 +1,7 @@
 package routers
 
 import (
+	"github.com/ZRehtt/go-blog-backend/internal/routers/api"
 	v1 "github.com/ZRehtt/go-blog-backend/internal/routers/api/v1"
 	"github.com/gin-gonic/gin"
 )
@@ -15,8 +16,10 @@ func NewRouter() *gin.Engine {
 	tag := v1.NewTag()
 
 	r.GET("/version", Version)
+	r.POST("/auth", api.GetAuth)
 
 	apiv1 := r.Group("/api/v1")
+	//apiv1.Use(middleware.JWTAuth())
 	{
 		apiv1.POST("/tags", tag.CreateTag)
 		apiv1.GET("/tags", tag.ListTags)

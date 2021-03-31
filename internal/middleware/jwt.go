@@ -4,7 +4,6 @@ import (
 	"strings"
 
 	"github.com/ZRehtt/go-blog-backend/pkg/app"
-	"github.com/ZRehtt/go-blog-backend/pkg/errcode"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 )
@@ -12,16 +11,16 @@ import (
 //JWTAuth 身份验证中间件
 func JWTAuth() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		ecode := errcode.Success
+		ecode := app.HttpSuccess
 		//从请求头Header的Authorization中找出token，但获取的是Bearer token的结构，需要分割
 		authHeader := c.Request.Header.Get("Authorization")
 		if authHeader == "" {
-			ecode = errcode.ErrorInvalidParams
+			ecode = app.ErrorInvalidParams
 		}
 		//按空格分割以获取完整的token
 		parts := strings.SplitN(authHeader, " ", 2)
 		if !(len(parts) == 2 && parts[0] == "Bearer") {
-			ecode = errcode.ErrorInvalidParams
+			ecode = app.ErrorInvalidParams
 		}
 
 		//token信息保存在parts[1]中
@@ -29,15 +28,14 @@ func JWTAuth() gin.HandlerFunc {
 		if err != nil {
 			switch err.(*jwt.ValidationError).Errors {
 			case jwt.ValidationErrorExpired:
-				ecode = errcode.ErrorUnauthorizedTokenTimeout
+				ecode = app.ErrorUnauthorizedTokenTimeout
 			default:
-				ecode = errcode.ErrorUnauthorizedToken
+				ecode = app.ErrorUnauthorizedToken
 			}
 		}
 
-		if ecode != errcode.Success {
-			response := app.NewResponse(c)
-			response.ToErrorResponse(ecode)
+		if ecode != app.HttpSuccess {
+			app.ErrorResponse(c, ecode, err.Error(), nil)
 			c.Abort()
 			return
 		}

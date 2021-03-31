@@ -9,7 +9,7 @@ import (
 
 //User ...
 type User struct {
-	Model
+	*Model
 	Username     *string `json:"username" gorm:"type:varchar(100);not null;comment:用户名"`
 	PasswordHash *[]byte `json:"passwordHash" gorm:"type:varchar(100);not null;comment:用户密码"`
 }
